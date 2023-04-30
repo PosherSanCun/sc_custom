@@ -18,7 +18,8 @@ local function isVector(variable)
 end
 
 function Base:_init(entity)
-    self.entity = entity -- 存储原生实体对象
+    self.entity = assert(entity) -- 存储原生实体对象
+    print(self.entity)
 end
 
 function Base:getEntity()
@@ -27,13 +28,9 @@ end
 
 function Base:__index(key)
     -- 检查原生实体对象是否存在该属性或方法
-    if self.entity[key] ~= nil then
-        return self.entity[key]
-    end
-
-    -- 检查实体对象是否为矢量类
-    if key == 'isVector' and getmetatable(self.entity) == Vector then
-        return true
+    local entityValue = rawget(self, "entity")
+    if entityValue and entityValue[key] ~= nil then
+        return entityValue[key]
     end
 
     -- 否则返回 nil
@@ -42,7 +39,7 @@ end
 
 function Base:__newindex(key, value)
     -- 检查原生实体对象是否存在该属性或方法
-    if self.entity[key] ~= nil then
+    if self.entity and self.entity[key] ~= nil then
         self.entity[key] = value
     else
         -- 否则将该属性或方法添加到 Base 实例中
