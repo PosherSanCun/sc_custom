@@ -1,4 +1,4 @@
-local classic = require 'sc_custom.tools.classic'
+local classic = Sc.classic
 
 local Base = classic.class('Base')
 

@@ -6,42 +6,42 @@ Call `classic.addCallback()` if you want to be notified when one of these
 happens.
 ]]
 classic.events = {
-    -- A new class is initialized. Callback is passed the name.
-    CLASS_INIT = 1,
+  -- A new class is initialized. Callback is passed the name.
+  CLASS_INIT = 1,
 
-    -- An attribute is first set in a class. Callback is passed the class object
-    -- and the attribute name and value.
-    CLASS_SET_ATTRIBUTE = 2,
+  -- An attribute is first set in a class. Callback is passed the class object
+  -- and the attribute name and value.
+  CLASS_SET_ATTRIBUTE = 2,
 
-    -- A method is defined in a class. Callback is passed the class object and
-    -- the method name and function.
-    CLASS_DEFINE_METHOD = 3,
+  -- A method is defined in a class. Callback is passed the class object and
+  -- the method name and function.
+  CLASS_DEFINE_METHOD = 3,
 
-    -- A new module is initialized. Callback is passed the module name.
-    MODULE_INIT = 4,
+  -- A new module is initialized. Callback is passed the module name.
+  MODULE_INIT = 4,
 
-    -- A class is added to a module. Callback is passed the module object and
-    -- class name.
-    MODULE_DECLARE_CLASS = 5,
+  -- A class is added to a module. Callback is passed the module object and
+  -- class name.
+  MODULE_DECLARE_CLASS = 5,
 
-    -- A submodule is added to a module. Callback is passed the module object
-    -- and submodule name.
-    MODULE_DECLARE_SUBMODULE = 6,
+  -- A submodule is added to a module. Callback is passed the module object
+  -- and submodule name.
+  MODULE_DECLARE_SUBMODULE = 6,
 
-    -- A function is added to a module. Callback is passed the module object and
-    -- function name.
-    MODULE_DECLARE_FUNCTION = 7,
+  -- A function is added to a module. Callback is passed the module object and
+  -- function name.
+  MODULE_DECLARE_FUNCTION = 7,
 
-    -- classic.torch is enabled. Callback is not passed anything.
-    CLASSIC_TORCH_ENABLED = 8,
+  -- classic.torch is enabled. Callback is not passed anything.
+  CLASSIC_TORCH_ENABLED = 8,
 
-    -- A class is loaded whose name does not match the name it was loaded
-    -- with. Callback is passed the class's actual name and the name it was
-    -- loaded with.
-    CLASS_REQUIRE_NAME_MISMATCH = 9
+  -- A class is loaded whose name does not match the name it was loaded
+  -- with. Callback is passed the class's actual name and the name it was
+  -- loaded with.
+  CLASS_REQUIRE_NAME_MISMATCH = 9
 }
 setmetatable(classic.events, {
-    __index = function(t, k) error(k .. " is not a valid classic event!") end})
+  __index = function(t, k) error(k .. " is not a valid classic event!") end })
 classic._callbacks = {}
 
 --[[ Register a callback function to be called whenever some particular event
@@ -58,10 +58,10 @@ Arguments:
 ]]
 function classic.addCallback(event, func)
   assert(event and type(event) == 'number',
-         "classic.addCallback() requires an event ID as its first argument.")
+    "classic.addCallback() requires an event ID as its first argument.")
   assert(func and type(func) == 'function',
-         "classic.addCallback() requires a callback function as its second " ..
-         "argument.")
+    "classic.addCallback() requires a callback function as its second " ..
+    "argument.")
   if classic._callbacks[event] == nil then
     classic._callbacks[event] = {}
   end
@@ -84,8 +84,8 @@ function classic._notify(event, ...)
   end
 end
 
-local Class = require 'tool.classic.Class'
-local Module = require 'tool.classic.Module'
+local Class = require 'sc_custom.tools.classic.Class'
+local Module = require 'sc_custom.tools.classic.Module'
 
 --[[ Creates a new module.
 
@@ -101,7 +101,7 @@ function classic.module(name)
   end
   if name == classic then
     error("classic:module() with a colon is wrong; use classic.module() " ..
-          "instead", 2)
+      "instead", 2)
   end
   if type(name) ~= 'string' then
     error('Expected module name to be a string.', 2)
@@ -127,7 +127,7 @@ function classic.class(name, parent)
   end
   if name == classic then
     error("classic:class() with a colon is wrong; use classic.class() instead",
-          2)
+      2)
   end
   if type(name) ~= 'string' then
     error("class name should be a string!", 2)
@@ -137,16 +137,16 @@ function classic.class(name, parent)
   end
   local registeredClass = classic._registry[name]
   if registeredClass ~= nil then
-    return classic.hotfix(registeredClass,name)--classic._dummyClass(registeredClass)
+    return classic.hotfix(registeredClass, name) --classic._dummyClass(registeredClass)
   end
 
-  local cls = Class{
+  local cls = Class {
     name = name,
     parent = parent
   }
   classic._registerClass(name, cls)
   if parent ~= nil then
-      return cls, cls:super()
+    return cls, cls:super()
   end
   return cls
 end
@@ -167,13 +167,13 @@ function classic.isObject(object)
     return false
   end
   local ok, isObject = pcall(
-      function()
-        if type(object.class) ~= 'function' then
-          return false
-        end
-        local klass = object:class()
-        return classic.isClass(klass)
-      end)
+    function()
+      if type(object.class) ~= 'function' then
+        return false
+      end
+      local klass = object:class()
+      return classic.isClass(klass)
+    end)
   return ok and isObject
 end
 
@@ -189,7 +189,7 @@ Arguments:
 function classic.strict(object, ...)
   if select('#', ...) ~= 0 or object == classic then
     error("strict() should have exactly one argument - maybe you used a " ..
-          "colon instead of a dot?")
+      "colon instead of a dot?")
   end
   assert(object ~= nil, "classic.strict is missing an object to make strict")
   if classic._torchCompatibility then
@@ -197,7 +197,7 @@ function classic.strict(object, ...)
     return
   end
   assert(classic.isObject(object), "classic.strict only works on classic " ..
-                                   "objects")
+    "objects")
   local index = getmetatable(object).__index
   setmetatable(object, {
     __index = function(t, k)
@@ -206,13 +206,13 @@ function classic.strict(object, ...)
         return item
       end
       error("Strictness violation: cannot access '" .. k ..
-            "' on object of type " .. tostring(object:class():name()), 2)
+        "' on object of type " .. tostring(object:class():name()), 2)
     end,
     __newindex = function(t, k, v)
       local name = t.name and t:name() or "unknown"
       error("Strictness violation: object of type " .. name
-            .. " was made strict, but you are trying to add an"
-            .. " attribute called " .. tostring(k) .. " to it.")
+        .. " was made strict, but you are trying to add an"
+        .. " attribute called " .. tostring(k) .. " to it.")
     end
   })
 end
@@ -253,7 +253,7 @@ function classic.deregisterClass(name)
   end
   if classic._registry[name] == nil then
     error("Cannot deregister class '" .. name
-          .. "' because it has not been registered")
+      .. "' because it has not been registered")
   end
   classic._registry[name] = nil
 end
@@ -305,7 +305,7 @@ function classic.deregisterAllClasses()
 end
 
 local function indent(level)
-    return string.rep("|  ", level)
+  return string.rep("|  ", level)
 end
 
 --[[ Recursively lists the contents of a module.
@@ -329,7 +329,7 @@ function classic.list(obj, level)
     end
     for name, moduleFunction in obj:functions() do
       print(indent(level + 1) ..
-            'function<' .. obj:name() .. '.' .. name .. '>')
+        'function<' .. obj:name() .. '.' .. name .. '>')
     end
   end
 end
@@ -343,12 +343,12 @@ function classic._loadClass(name)
   if value == true then
     value = classic._registry[name]
   end
-  assert(classic.isClass(value) ,
-         "Loaded " .. name .. " but it is not a class")
+  assert(classic.isClass(value),
+    "Loaded " .. name .. " but it is not a class")
   local klass = value
   if klass:name() ~= name then
     classic._notify(
-        classic.events.CLASS_REQUIRE_NAME_MISMATCH, klass:name(), name)
+      classic.events.CLASS_REQUIRE_NAME_MISMATCH, klass:name(), name)
   end
   return klass
 end
@@ -362,7 +362,7 @@ function classic._registerClass(name, klass)
   end
   if name ~= klass._name then
     error("Trying to register a class with a name other than its " ..
-          "assigned name.")
+      "assigned name.")
   end
   if classic._registry[name] ~= nil then
     if classic._registry[name] ~= klass then
@@ -373,7 +373,6 @@ function classic._registerClass(name, klass)
   classic._registry[name] = klass
 end
 
-
 function classic._init()
   -- Global class lookup table.
   classic._registry = {}
@@ -383,7 +382,6 @@ function classic._init()
   classic._torchCompatibility = false
 
   classic._createObject = function(klass)
-
     local methods = klass._methods
     local index = methods
 
@@ -433,7 +431,6 @@ from the original, it will throw an error.
 This behaviour may be subject to change in the future.
 ]]
 function classic._dummyClass(klass)
-
   local dummy = {}
   local methods = rawget(klass, '_methods')
   setmetatable(dummy, {
@@ -458,14 +455,14 @@ function classic._dummyClass(klass)
 
       if methods[name] == nil then
         log.warn("You are defining a version of class " .. klass:name()
-              .. " which conflicts with a previously-defined version. (Method "
-              .. name .. " was not present, before)", 2)
+          .. " which conflicts with a previously-defined version. (Method "
+          .. name .. " was not present, before)", 2)
       end
 
       if string.dump(methods[name]) ~= string.dump(value) then
         log.warn("You are defining a version of class " .. klass:name()
-              .. " which conflicts with a previously-defined version. (Method "
-              .. name .. " is defined differently in the two versions.)", 2)
+          .. " which conflicts with a previously-defined version. (Method "
+          .. name .. " is defined differently in the two versions.)", 2)
       end
 
       return rawset(tbl, name, value)
@@ -475,10 +472,10 @@ function classic._dummyClass(klass)
   return dummy
 end
 
-function classic.hotfix(klass,name)
-  print('classic.hotfix',name)
-  Class._init(klass, name, rawget(klass,'_parent') or nil)
-  return klass, rawget(klass,'_parent')
+function classic.hotfix(klass, name)
+  print('classic.hotfix', name)
+  Class._init(klass, name, rawget(klass, '_parent') or nil)
+  return klass, rawget(klass, '_parent')
 end
 
 classic._init()

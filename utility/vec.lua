@@ -1,4 +1,4 @@
-local classic = require 'sc_custom.tools.classic'
+local classic = Sc.classic
 local Vec = classic.class('Vec')
 
 -- 初始化方法，接受数字或原生Vector对象

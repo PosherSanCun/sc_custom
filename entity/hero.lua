@@ -1,14 +1,14 @@
-local classic = require 'classic'
-local Base = require 'Base'
+local classic = Sc.classic
+local Base = require 'sc_custom.entity.base'
 local Vec = require 'sc_custom.utility.vec'
 
 -- 定义一个新的 Hero 类，继承自 Base 类
-local Hero = classic.extend(Base, 'Hero')
+local Hero, super = classic.class('Hero', Base)
 
 -- 构造函数，接收一个英雄实体对象
 function Hero:_init(hero)
     -- 调用父类的构造函数，保存英雄实体对象
-    Hero.super._init(self, hero)
+    super._init(self, hero)
 end
 
 -- 获取英雄等级

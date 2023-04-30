@@ -18,6 +18,12 @@ We hope more developers can join us and participate in the development and maint
 
 Come join us in this project!👏🎉
 
+框架使用 classic 库实现面向对象编程，使用前需要先导入 classic 库: github 地址:https://github.com/deepmind/classic/blob/master/README.md
+
+```lua
+    require 'tools.classic'
+```
+
 **1.共通基类（Base）**
 构造函数：接收原生实体对象并保存
 获取原生实体对象的方法
@@ -66,6 +72,7 @@ Come join us in this project!👏🎉
 
 **7.工具类（Tools）**
 向量类(Vec)
+计时器类(Timer)
 
 **项目入口**
 

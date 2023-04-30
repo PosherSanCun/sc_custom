@@ -76,7 +76,6 @@ if Timers == nil then
       return t:CreateTimer(...)
     end
   })
-  --Timers.__index = Timers
 end
 
 function Timers:start()
@@ -235,4 +234,4 @@ end
 
 if not Timers.timers then Timers:start() end
 
-GameRules.Timers = Timers
+return Timers
