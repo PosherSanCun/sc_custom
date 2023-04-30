@@ -98,11 +98,31 @@ sc_custom/
 
 提供一个初始化函数，用于将原生实体对象包装为相应的包装类对象。
 
-## 使用示例
+## 安装
+
+1.将整个文件放置在\dota 2 beta\game\dota_addons\new3\scripts\vscripts\目录下
+
+2.然后在 addon_game_mode.lua 中添加：
 
 ```lua
-    local unit = Sc.Hero(player:GetAssignedHero())  -- 包装英雄 这一步通常会用事件触发
-    print(unit)                                     -- 对__String方法的重载
-    print(unit:GetName())                           -- 定义自定义方法
-    print(unit:GetUnitName())                       -- 仍然可以直接使用原生的方法
+    require 'sc_custom._init'
+```
+
+## 测试示例
+
+```lua
+    Debug = Debug or class({})
+
+    function Debug:init()
+        ListenToGameEvent("player_chat", Dynamic_Wrap(Debug, "on_player_chat"), self)   --注册玩家聊天回调
+    end
+
+    function Debug:on_player_chat(event)
+        local unit = Sc.Hero(player:GetAssignedHero())  -- 包装英雄 这一步通常会用事件触发
+        print(unit)                                     -- 对__String方法的重载
+        print(unit:GetName())                           -- 定义自定义方法
+        print(unit:GetUnitName())                       -- 仍然可以直接使用原生的方法
+    end
+
+    --进入游戏输入任意信息即可看到打印结果
 ```
