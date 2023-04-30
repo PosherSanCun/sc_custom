@@ -97,3 +97,12 @@ sc_custom/
 ## 项目入口
 
 提供一个初始化函数，用于将原生实体对象包装为相应的包装类对象。
+
+## 使用示例
+
+```lua
+    local unit = Sc.Hero(player:GetAssignedHero())  -- 包装英雄 这一步通常会用事件触发
+    print(unit)                                     -- 对__String方法的重载
+    print(unit:GetName())                           -- 定义自定义方法
+    print(unit:GetUnitName())                       -- 仍然可以直接使用原生的方法
+```
